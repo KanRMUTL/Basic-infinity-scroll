@@ -1,25 +1,26 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-
+import React, { useEffect } from "react";
+import getMovies from "client/getMovies";
+import { useState } from "react";
+import { Movie } from "types/Movie";
+import MovieItem from "MovieItem/MovieItem";
+import { Wrapper } from "App.styled";
 function App() {
+  const [page, setPage] = useState(1);
+  const [movies, setMovies] = useState<Movie[]>([]);
+
+  useEffect(() => {
+    const fetchMovies = async () => {
+      setMovies(await getMovies(page));
+    };
+    fetchMovies();
+  }, [page]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Wrapper>
+      {movies.map((movie) => (
+        <MovieItem key={movie.id} movie={movie} />
+      ))}
+    </Wrapper>
   );
 }
 
